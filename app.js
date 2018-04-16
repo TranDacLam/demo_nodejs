@@ -11,6 +11,8 @@ var bcrypt = require('bcryptjs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var productsRouter = require('./routes/products');
+var rolesRouter = require('./routes/roles');
 
 var expressValidator = require('express-validator');
 var flash = require('connect-flash');
@@ -20,7 +22,19 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-mongoose.connect('mongodb://localhost:27017/demo_nodejs', { useMongoClient: true });
+mongoose.connect('mongodb://localhost/demo_nodejs');
+
+var fs = require('fs');
+
+/*
+ * initializes all models and sources them as .model-name
+ */
+fs.readdirSync('./models/').forEach(function(file) {
+	if (file !== 'index.js') {
+	    var moduleName = file.split('.')[0];1
+	    exports[moduleName] = require('./models/' + moduleName);
+	}
+});
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -30,6 +44,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/admin/product', productsRouter);
+app.use('/admin/role', rolesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

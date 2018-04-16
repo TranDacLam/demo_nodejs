@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<!-- Head -->
+<head>
+    <% include ./../layouts/head %>
+</head>
+<body class="container">
+
+<!-- Header -->
+<header>
+    <% include ./../layouts/header %>
+</header>
+
+<main>
+    <div class="container">
+		<form action="" method="POST">
+			<legend>Update ROLE</legend>
+		
+			<div class="form-group">
+				<label for="">name</label>
+				<input type="text" class="form-control" name="name" value="<%= role ? role.name : '' %>">
+			</div>
+		
+			<button type="submit" class="btn btn-primary">Save</button>
+		</form>
+	</div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <% include ./../layouts/footer %>
+</footer>
+
+</body>
+</html>
