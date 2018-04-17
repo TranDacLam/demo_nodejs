@@ -15,9 +15,18 @@
 
 <main>
     <div class="container">
+
 		<form action="" method="POST">
 			<legend>NEW ROLE</legend>
-		
+		    <% if(errors) { %>
+                <div class="alert alert-danger">
+                    <% errors.forEach(function(e){ %>
+
+                        <%= e.msg %> <br/>
+                    <%});%>
+
+                </div>
+            <% };%>
 			<div class="form-group">
 				<label for="">name</label>
 				<input type="text" class="form-control" name="name">

@@ -42,6 +42,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(expressValidator());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin/product', productsRouter);
