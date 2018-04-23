@@ -10,6 +10,8 @@ var passport = require('passport');
 var bcrypt = require('bcryptjs');
 
 var indexRouter = require('./routes/index');
+var signupRouter = require('./routes/signup');
+var loginRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 var productsRouter = require('./routes/products');
 var rolesRouter = require('./routes/roles');
@@ -44,8 +46,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(expressValidator());
 
+app.use(session({
+    secret: 'jindo',
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 app.use('/', indexRouter);
+app.use('/signup', signupRouter);
 app.use('/users', usersRouter);
+app.use('/admin/login', loginRouter);
 app.use('/admin/product', productsRouter);
 app.use('/admin/role', rolesRouter);
 
