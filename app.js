@@ -31,12 +31,12 @@ var fs = require('fs');
 /*
  * initializes all models and sources them as .model-name
  */
-fs.readdirSync('./models/').forEach(function(file) {
-	if (file !== 'index.js') {
-	    var moduleName = file.split('.')[0];1
-	    exports[moduleName] = require('./models/' + moduleName);
-	}
-});
+// fs.readdirSync('./models/').forEach(function(file) {
+// 	if (file !== 'index.js') {
+// 	    var moduleName = file.split('.')[0];1
+// 	    exports[moduleName] = require('./models/' + moduleName);
+// 	}
+// });
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -48,7 +48,6 @@ app.use(expressValidator());
 
 app.use(session({
     secret: 'jindo',
-    cookie: { maxAge: 60000 },
     resave: true,
     saveUninitialized: true
 }));
