@@ -19,7 +19,7 @@ var userShema = new Schema({
         required: [true, 'password required']
     },
     is_active: Boolean,
- 	role: { type: Schema.Types.ObjectId, ref: 'Role' },
+ 	role: { type: Schema.Types.ObjectId, ref: 'Role', default: null },
 });
 
 userShema.pre('save', function(next){

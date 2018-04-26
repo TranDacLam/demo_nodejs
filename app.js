@@ -11,7 +11,7 @@ var bcrypt = require('bcryptjs');
 
 var indexRouter = require('./routes/index');
 var signupRouter = require('./routes/signup');
-var loginRouter = require('./routes/login');
+var signinRouter = require('./routes/signin');
 var usersRouter = require('./routes/users');
 var productsRouter = require('./routes/products');
 var rolesRouter = require('./routes/roles');
@@ -55,11 +55,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+require('./config/passport');
+
 
 app.use('/', indexRouter);
 app.use('/signup', signupRouter);
 app.use('/users', usersRouter);
-app.use('/admin/login', loginRouter);
+app.use('/admin/signin', signinRouter);
 app.use('/admin/product', productsRouter);
 app.use('/admin/role', rolesRouter);
 
@@ -73,7 +75,9 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  if(err){
+    console.log(err)
+  }
   // render the error page
   res.status(err.status || 500);
   res.render('shared/error');
