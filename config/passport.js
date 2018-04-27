@@ -11,10 +11,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
     User.findById({ '_id': id }, function (err, user) {
-        console.log(2)
         if (err) console.log(err);
         // Prints "Space Ghost is a talk show host".
-        console.log(user)
         if(user){
             return done(null, user);
         }else{
@@ -36,11 +34,11 @@ passport.use('local-signin', new LocalStrategy({
                     if(status){
                         return done(null, user);
                     }else{
-                       return done(null, false, { message: 'Tài Khoảng Không Đúng' });
+                       return done(null, false, { message: 'Tài Khoản Không Đúng' });
                     }
                 });
             }else{
-                return done(null, false, { message: 'Tài Khoảng Không Đúng' });
+                return done(null, false, { message: 'Tài Khoản Không Đúng' });
             }
         });
     }
@@ -52,6 +50,7 @@ passport.use('local-signup', new LocalStrategy({
         passReqToCallback: true,
     },
     function(req, email, password, done){
+        console.log(222)
         req.checkBody('email', 'Invalid email').notEmpty().isEmail();
         req.checkBody('full_name', 'Invalid full name').notEmpty();
         req.checkBody('password', 'Invalid password').notEmpty().isLength({min: 4});
@@ -59,21 +58,20 @@ passport.use('local-signup', new LocalStrategy({
         var user = new User({
             full_name: req.body.full_name,
             email: req.body.email,
-            password: req.body.password,
-            avatar: req.file ? req.file.filename: '' 
+            password: req.body.password, 
         });
-        if(errors || !checkPassword(req.body.password, req.body.password_confirm)){
+        if(errors || !user.checkPasswordConfirm(req.body.password, req.body.password_confirm)){
             var messages = [];
             errors.forEach(function(error){
-                if(error.param === 'password' && !checkPassword(req.body.password, req.body.password_confirm)){
-                     messages.password_confirm = '.....';
+                if(error.param === 'password' && !user.checkPasswordConfirm(req.body.password, req.body.password_confirm)){
+                     messages.push('password confirm does not match password');
                 }else{
-                    messages[error.param] = error.msg;
+                    messages.push(error.msg);
                 }
             });
-            return done(null, false, { errors: messages });
+            console.log("oke", messages)
+            return done(null, false, req.flash('error', messages));
         }else{
-            
             user.save(function(err){
                 if(err){ console.log(err) }
                 else{
@@ -83,8 +81,3 @@ passport.use('local-signup', new LocalStrategy({
         }
     }
 ));
-
-function checkPassword(pw, confirm){
-    return pw === confirm;
-}
-

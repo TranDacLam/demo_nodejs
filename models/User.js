@@ -40,4 +40,8 @@ userShema.methods.hashPassword = function(candidatePassword, cb){
     });
 };
 
+userShema.methods.checkPasswordConfirm = function(pw1, pw2){
+    return pw1 === pw2;
+};
+
 module.exports = mongoose.model('User', userShema);

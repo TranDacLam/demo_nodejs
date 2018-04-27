@@ -8,16 +8,15 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var bcrypt = require('bcryptjs');
+var expressValidator = require('express-validator');
+var flash = require('connect-flash');
+var MongoStore = require('connect-mongo')(session);
 
 var indexRouter = require('./routes/index');
-var signupRouter = require('./routes/signup');
-var signinRouter = require('./routes/signin');
 var usersRouter = require('./routes/users');
 var productsRouter = require('./routes/products');
 var rolesRouter = require('./routes/roles');
 
-var expressValidator = require('express-validator');
-var flash = require('connect-flash');
 var app = express();
 
 // view engine setup
@@ -45,11 +44,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(expressValidator());
+app.use(flash());
 
 app.use(session({
     secret: 'jindo',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 10 * 60 * 1000 }
 }));
 
 app.use(passport.initialize());
@@ -59,9 +61,7 @@ require('./config/passport');
 
 
 app.use('/', indexRouter);
-app.use('/signup', signupRouter);
 app.use('/users', usersRouter);
-app.use('/admin/signin', signinRouter);
 app.use('/admin/product', productsRouter);
 app.use('/admin/role', rolesRouter);
 
